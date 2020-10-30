@@ -2,18 +2,36 @@ package com.example.myfirstapp
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
+
+private val okHttpClient = OkHttpClient.Builder()
+    .connectTimeout(1, TimeUnit.MINUTES)
+    .readTimeout(30, TimeUnit.SECONDS)
+    .writeTimeout(15, TimeUnit.SECONDS)
+    .build()
+
+// Create Retrofit
+private val retrofit = Retrofit.Builder()
+    .baseUrl("https://rickandmortyapi.com/")
+    .addConverterFactory(GsonConverterFactory.create())
+    .client(okHttpClient)
+    .build()
 
 /**
  * A simple [Fragment] subclass.
@@ -28,17 +46,24 @@ class RickAndMortyFrag : Fragment(R.layout.fragment_rick_and_morty) {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1) ?: "ERROR"
         }
+
     }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_rick_and_morty, container, false)
+
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         getCharacter(param1)
-
-//        view?.findViewById<TextView>(R.id.fragmentTitle)?.apply {
-//            text = param1
-//        }
-
     }
 
     companion object {
@@ -53,18 +78,11 @@ class RickAndMortyFrag : Fragment(R.layout.fragment_rick_and_morty) {
 
     private fun getCharacter(characterId: String) {
 
-        // Create Retrofit
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://rickandmortyapi.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
         // Create Service
         val service = retrofit.create(APIService::class.java)
 
         val job = Job()
         val uiScope = CoroutineScope(Dispatchers.Main + job)
-
 
         uiScope.launch {
             /*
@@ -77,12 +95,17 @@ class RickAndMortyFrag : Fragment(R.layout.fragment_rick_and_morty) {
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
 
-                    val textView = view?.findViewById<TextView>(R.id.textView)?.apply {
-                        text = response.body()?.image }
+                    view?.findViewById<TextView>(R.id.fragmentTitle)?.apply {
+                        text = response.body()?.image
+                    }
 
-//                    val url = URL(response.body()?.image)
-//                    val bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream())
-//                    imageView.setImageBitmap(bmp)
+                    val imageView = view?.findViewById<ImageView>(R.id.rickAndMortyPicture)
+
+                    imageView?.let {
+                        Picasso.Builder(requireContext()).apply {
+                            listener { _, _, exception -> exception.printStackTrace() }
+                        }.build().load(response.body()?.image).into(imageView)
+                    }
 
                     Log.d("Pretty Printed JSON :", response.body()?.image)
 
@@ -94,6 +117,5 @@ class RickAndMortyFrag : Fragment(R.layout.fragment_rick_and_morty) {
             }
         }
     }
-
 
 }
