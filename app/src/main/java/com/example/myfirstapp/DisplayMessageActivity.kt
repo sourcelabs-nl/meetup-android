@@ -1,6 +1,5 @@
 package com.example.myfirstapp
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
@@ -11,7 +10,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.net.URL
 
 
 class DisplayMessageActivity : AppCompatActivity() {
