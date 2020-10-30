@@ -10,28 +10,12 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 
-private val okHttpClient = OkHttpClient.Builder()
-    .connectTimeout(1, TimeUnit.MINUTES)
-    .readTimeout(30, TimeUnit.SECONDS)
-    .writeTimeout(15, TimeUnit.SECONDS)
-    .build()
-
-// Create Retrofit
-private val retrofit = Retrofit.Builder()
-    .baseUrl("https://rickandmortyapi.com/")
-    .addConverterFactory(GsonConverterFactory.create())
-    .client(okHttpClient)
-    .build()
 
 /**
  * A simple [Fragment] subclass.
@@ -79,7 +63,7 @@ class RickAndMortyFrag : Fragment(R.layout.fragment_rick_and_morty) {
     private fun getCharacter(characterId: String) {
 
         // Create Service
-        val service = retrofit.create(APIService::class.java)
+        val service = RETROFIT.create(APIService::class.java)
 
         val job = Job()
         val uiScope = CoroutineScope(Dispatchers.Main + job)
@@ -107,7 +91,7 @@ class RickAndMortyFrag : Fragment(R.layout.fragment_rick_and_morty) {
                         }.build().load(response.body()?.image).into(imageView)
                     }
 
-                    Log.d("Pretty Printed JSON :", response.body()?.image)
+                    Log.d("Pretty Printed JSON :", response.body()!!.image)
 
                 } else {
 

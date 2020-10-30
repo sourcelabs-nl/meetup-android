@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">My first app</string>
     <string name="edit_message">Enter a message</string>
-    <string name="load_new_fragment">Next</string>
+    <string name="load_new_fragment">Get Schwifty</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="default_frag_title">Default Title</string>
+    <string name="default_frag_title">Loading be patient…</string>
+    <string name="rickAndMortyContentDesc">RickAndMortyPic</string>
 </resources>
