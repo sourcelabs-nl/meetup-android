@@ -12,9 +12,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
+private const val ARG_PARAM1 = "seed"
 
 
 /**
@@ -23,12 +21,12 @@ private const val ARG_PARAM1 = "param1"
  * create an instance of this fragment.
  */
 class RickAndMortyFrag : Fragment(R.layout.fragment_rick_and_morty) {
-    private lateinit var param1: String
+    private lateinit var randomNumberForApi: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1) ?: "ERROR"
+            randomNumberForApi = it.getString(ARG_PARAM1) ?: "ERROR"
         }
 
     }
@@ -47,7 +45,7 @@ class RickAndMortyFrag : Fragment(R.layout.fragment_rick_and_morty) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getCharacter(param1)
+        getCharacter(randomNumberForApi)
     }
 
     companion object {
